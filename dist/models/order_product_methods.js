@@ -42,17 +42,21 @@ class order_product_model {
     }
     // get specific order
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async get_specific_order_product(id) {
+    async get_specific_order_product(order_id) {
         try {
             // open connection with Client
             const Connection = await database_1.default.connect();
-            const sql = "SELECT * FROM order_products where id=($1)";
+            const sql = "SELECT * FROM order_products where order_id=($1)";
             // run query
-            const output = await Connection.query(sql, [id]);
+            const output = await Connection.query(sql, [order_id]);
+            const op = output.rows;
             // release the connection to database
             Connection.release();
             // retunrn the order
-            return output.rows[0];
+            if (output.rows.length) {
+                return op;
+            }
+            return null;
         }
         catch (err) {
             throw new Error(`Could not get all the orders: ${err}`);

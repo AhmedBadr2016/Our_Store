@@ -24,7 +24,7 @@ const create = async (req, res) => {
         res.json(new_product);
     }
     catch (err) {
-        res.status(400);
+        res.status(400).send(`Token required- name and price`);
         res.json(err);
     }
 };

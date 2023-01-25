@@ -11,7 +11,7 @@ const index = async (_req: Request, res: Response) => {
 
 const show = async (req: Request, res: Response) => {
   const output_one = await our_order_product_main.get_specific_order_product(
-    req.body.id
+    req.body.order_id
   );
   res.json(output_one);
 };

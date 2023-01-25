@@ -28,12 +28,13 @@ const create = async (req, res) => {
             res.json(new_order);
         }
         else {
-            res.status(400);
-            res.json(Error);
+            res
+                .status(400)
+                .send(`Please enter the status between [active or complete] ?`);
         }
     }
     catch (err) {
-        res.status(400);
+        res.status(400).send(`The status in the body should be active or complete`);
         res.json(err);
     }
 };

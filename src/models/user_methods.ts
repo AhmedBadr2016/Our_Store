@@ -114,16 +114,16 @@ export class userStore {
 
   async authenticate(email: string, password: string): Promise<users | null> {
     const conn = await Client.connect();
-    const sql = "SELECT password FROM users WHERE username= ($1) ";
+    const sql = "SELECT * FROM users WHERE email = ($1) ";
 
-    const result = await conn.query(sql, [email, hash_password(password)]);
+    const result = await conn.query(sql, [email]);
 
-    console.log(`${password}${config.papper}`);
+    console.log(`The email: ${email} ?`);
 
     if (result.rows.length) {
       const user = result.rows[0];
 
-      console.log(user);
+      console.log(`yes, it's existed in the database!`);
 
       if (bcrypt.compareSync(`${password}${config.papper}`, user.password)) {
         return user;

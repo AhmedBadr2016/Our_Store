@@ -26,9 +26,9 @@ SALT_ROUNDS=10
 - You have to create two databases with the values you set in POSTGRES_DB, POSTGRES_TEST_DB. For example to connect the psql, use the following sql :
 
 - CREATE USER shopping_user WITH PASSWORD 'password123';
-- CREATE DATABASE shopping;
+- CREATE DATABASE our_store;
 - \c shopping
-- GRANT ALL PRIVILEGES ON DATABASE shopping TO shopping_user;
+- GRANT ALL PRIVILEGES ON DATABASE our_store TO shopping_user;
 
 ## overviow
 
@@ -47,9 +47,20 @@ SALT_ROUNDS=10
 
 ### 4. QA and README.md
 
+- To format run `npm run format`
+- To lint run `npm run lint`
+- To fix the linting `npm run lint:fix`
+- To test database `npm run test-db`
 - To tests for database run `npm run test-up`
 - To tests for routes run `npm run test-teardown`.
 
 ### 5. local host ports
 
+- Run `npm run start` to start the application
 - server is running on port 3000
+- go to http://localhost:3000/user/sign_up and create new user
+- go to http://localhost:3000/user/sign_in and open your user
+- go to http://localhost:3000/user/sign_in/order and create new order
+- go to http://localhost:3000/user/sign_up and create new user
+- go to http://localhost:3000/user/sign_in/order/:id/products and add products to your order
+- go to http://localhost:3000/order_product/:id and show products of your order

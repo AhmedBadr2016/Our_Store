@@ -10,7 +10,7 @@ const index = async (_req, res) => {
     res.json(output_all);
 };
 const show = async (req, res) => {
-    const output_one = await our_order_product_main.get_specific_order_product(req.body.id);
+    const output_one = await our_order_product_main.get_specific_order_product(req.body.order_id);
     res.json(output_one);
 };
 const create = async (req, res) => {

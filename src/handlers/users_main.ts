@@ -52,7 +52,18 @@ const authenticate = async (req: Request, res: Response) => {
       req.body.email,
       req.body.password
     );
-    res.json(new_user);
+    if (new_user !== null) {
+      res.json(new_user);
+    } else {
+      res
+        .status(404)
+        .send(
+          `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+        );
+      console.log(
+        `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+      );
+    }
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -72,7 +83,9 @@ const update = async (req: Request, res: Response) => {
     const new_user = await our_user_main.update(user);
     res.json(new_user);
   } catch (err) {
-    res.status(400);
+    res
+      .status(400)
+      .send(`Token required- email & the value which needed to be updated`);
     res.json(err);
   }
 };
