@@ -2,8 +2,6 @@ import Client from "../database";
 import { orders } from "../types/orders";
 
 class order_model {
-  // the order model
-  // first create item in the database!
   async create(o: orders): Promise<orders> {
     try {
       // open connection with Client

@@ -29,8 +29,13 @@ const index = async (_req, res) => {
     }
 };
 const show = async (req, res) => {
+    const order = {
+        id: req.body.order_id,
+        status: req.body.status,
+        user_id: req.body.user_id,
+    };
     try {
-        const new_order = await our_order_main.get_specific_order(req.body.id);
+        const new_order = await our_order_main.get_specific_order(order.id);
         if (new_order) {
             return res.json({
                 status: 200,

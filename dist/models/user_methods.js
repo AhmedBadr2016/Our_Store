@@ -42,8 +42,9 @@ class userStore {
     async create(u) {
         try {
             console.log("above the inserting of user");
-            const sql = "INSERT INTO users (first_name, last_name, email, username, password) VALUES ( ($1) , ($2) , ($3) ,($4), ($5)) RETURNING *  ";
             const conn = await database_1.default.connect();
+            console.log("The connection is opened");
+            const sql = "INSERT INTO users (first_name, last_name, email, username, password) VALUES ( ($1) , ($2) , ($3) ,($4), ($5) ) RETURNING *  ";
             const result = await conn.query(sql, [
                 u.first_name,
                 u.last_name,
@@ -51,12 +52,20 @@ class userStore {
                 u.username,
                 hash_password(u.password),
             ]);
+            console.log("Is the user created?");
             const user = result.rows[0];
             conn.release();
-            return user;
+            if (result.rows.length) {
+                console.log("Yes, user created");
+                return user;
+            }
+            else {
+                console.log("No, user can not be created");
+                return null;
+            }
         }
-        catch (err) {
-            throw new Error(`Could not add new user ${u.email}. Error: ${err}`);
+        catch (ERROR) {
+            throw new Error(`Could not add new user because it's existed ${u.email}. Error: ${ERROR}`);
         }
     }
     // update user

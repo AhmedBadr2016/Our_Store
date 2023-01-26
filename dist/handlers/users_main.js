@@ -11,7 +11,6 @@ const our_user_main = new user_methods_1.userStore();
 const users_handler = (app) => {
     app.get("/users", validation_1.default, index);
     app.get("/user/:email", validation_1.default, show);
-    console.log("above the create user");
     app.post("/user/sign_up", create);
     app.post("/user/sign_in", authenticate);
     app.patch("/user/edit/:email", validation_1.default, update);
@@ -72,13 +71,13 @@ const create = async (req, res) => {
         else {
             res
                 .status(404)
-                .send(`The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
-            console.log(`The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
+                .send(`The user is exist in database. Please try again or go to: http://localhost:3000/user/sign_in and sign in and enter the email & password in the body`);
+            console.log(`The user is not exist. Please go to: http://localhost:3000/user/sign_in and sign in and enter the email & password in the body`);
         }
     }
     catch (err) {
         res.status(400);
-        res.json(err);
+        res.json(`Go to http://localhost:3000/user/sign_in. Error: ${err}`);
     }
 };
 const authenticate = async (req, res) => {

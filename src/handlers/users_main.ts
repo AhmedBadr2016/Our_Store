@@ -10,14 +10,10 @@ const our_user_main = new userStore();
 
 const users_handler = (app: express.Application) => {
   app.get("/users", verifyAuthToken, index);
-
   app.get("/user/:email", verifyAuthToken, show);
-  console.log("above the create user");
   app.post("/user/sign_up", create);
   app.post("/user/sign_in", authenticate);
-
   app.patch("/user/edit/:email", verifyAuthToken, update);
-
   app.delete("/user/delete/:email", verifyAuthToken, destroy);
 };
 
@@ -79,15 +75,15 @@ const create = async (req: Request, res: Response) => {
       res
         .status(404)
         .send(
-          `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+          `The user is exist in database. Please try again or go to: http://localhost:3000/user/sign_in and sign in and enter the email & password in the body`
         );
       console.log(
-        `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+        `The user is not exist. Please go to: http://localhost:3000/user/sign_in and sign in and enter the email & password in the body`
       );
     }
   } catch (err) {
     res.status(400);
-    res.json(err);
+    res.json(`Go to http://localhost:3000/user/sign_in. Error: ${err}`);
   }
 };
 
@@ -99,7 +95,6 @@ const authenticate = async (req: Request, res: Response) => {
       req.body.password
     );
     if (new_user !== null) {
-      // res.json(new_user);
       const token = jwt.sign(
         { new_user },
         config.tokensecret as unknown as string
