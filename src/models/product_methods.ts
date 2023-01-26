@@ -9,7 +9,7 @@ class product_model {
       // open connection with Client
       const Connection = await Client.connect();
       const sql =
-        "INSERT INTO products (name, price) VALUES ($1 , $2) RETURNING *";
+        "INSERT INTO products (name, price) VALUES (($1) , ($2)) RETURNING *";
       // run query
       const output = await Connection.query(sql, [p.name, p.price]);
       // release the connection to database

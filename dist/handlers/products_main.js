@@ -4,43 +4,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const product_methods_1 = __importDefault(require("../models/product_methods"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = __importDefault(require("../config"));
+const validation_1 = __importDefault(require("../validation/validation"));
 const our_product_main = new product_methods_1.default();
 const index = async (_req, res) => {
     const new_product = await our_product_main.get_all_products();
-    if (new_product !== null) {
-        // res.json(new_product);
-        const token = jsonwebtoken_1.default.sign({ new_product }, config_1.default.tokensecret);
+    if (new_product) {
         return res.json({
             status: 200,
-            data: { ...new_product, token },
+            data: { ...new_product },
             message: `product authenticated successfully`,
         });
     }
     else {
-        res
-            .status(404)
-            .send(`The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
-        console.log(`The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
+        return res.json({
+            status: 401,
+            message: `No products in that order`,
+        });
     }
 };
 const show = async (req, res) => {
     const new_product = await our_product_main.get_specific_product(req.body.id);
-    if (new_product !== null) {
-        // res.json(new_product);
-        const token = jsonwebtoken_1.default.sign({ new_product }, config_1.default.tokensecret);
+    if (new_product) {
         return res.json({
             status: 200,
-            data: { ...new_product, token },
+            data: { ...new_product },
             message: `product authenticated successfully`,
         });
     }
     else {
-        res
-            .status(404)
-            .send(`The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
-        console.log(`The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
+        return res.json({
+            status: 401,
+            message: `No products in that order`,
+        });
     }
 };
 const create = async (req, res) => {
@@ -52,11 +47,9 @@ const create = async (req, res) => {
         };
         const new_product = await our_product_main.create(product);
         if (new_product !== null) {
-            // res.json(new_product);
-            const token = jsonwebtoken_1.default.sign({ new_product }, config_1.default.tokensecret);
-            return res.json({
+            res.json({
                 status: 200,
-                data: { ...new_product, token },
+                data: { ...new_product },
                 message: `product authenticated successfully`,
             });
         }
@@ -68,8 +61,8 @@ const create = async (req, res) => {
         }
     }
     catch (err) {
-        res.status(400).send(`Token required- name and price`);
-        res.json(err);
+        res.status(401);
+        res.json(`Access denied, invalid token or The product and password don't match ${err}`);
     }
 };
 const update = async (req, res) => {
@@ -80,20 +73,18 @@ const update = async (req, res) => {
             price: req.body.price,
         };
         const new_product = await our_product_main.update_product(product);
-        if (new_product !== null) {
-            // res.json(new_product);
-            const token = jsonwebtoken_1.default.sign({ new_product }, config_1.default.tokensecret);
+        if (new_product) {
             return res.json({
                 status: 200,
-                data: { ...new_product, token },
+                data: { ...new_product },
                 message: `product authenticated successfully`,
             });
         }
         else {
-            res
-                .status(404)
-                .send(`The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
-            console.log(`The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
+            return res.json({
+                status: 401,
+                message: `No products in that order`,
+            });
         }
     }
     catch (err) {
@@ -103,27 +94,25 @@ const update = async (req, res) => {
 };
 const destroy = async (req, res) => {
     const new_product = await our_product_main.delete(req.params.id);
-    if (new_product !== null) {
-        // res.json(new_product);
-        const token = jsonwebtoken_1.default.sign({ new_product }, config_1.default.tokensecret);
+    if (new_product) {
         return res.json({
             status: 200,
-            data: { ...new_product, token },
-            message: `product authenticated successfully`,
+            data: { ...new_product },
+            message: `product authenticated successfully & deleted `,
         });
     }
     else {
-        res
-            .status(404)
-            .send(`The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
-        console.log(`The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`);
+        return res.json({
+            status: 401,
+            message: `No products in that order`,
+        });
     }
 };
 const products_handler = (app) => {
-    app.get("/products", index);
-    app.get("/product/:id", show);
-    app.post("/product/create", create);
-    app.patch("/product/edit/:id", update);
-    app.delete("/product/delete/:id", destroy);
+    app.get("/products", validation_1.default, index);
+    app.get("/product/:id", validation_1.default, show);
+    app.post("/product/create", validation_1.default, create);
+    app.patch("/product/edit/:id", validation_1.default, update);
+    app.delete("/product/delete/:id", validation_1.default, destroy);
 };
 exports.default = products_handler;

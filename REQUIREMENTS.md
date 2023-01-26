@@ -7,16 +7,18 @@
 
 #### Products
 
-- Index (/products) GET
-- Show (/products/:id) GET
-- Create (/product/create) POST
-  body: {name, price}
+- Index (/products) GET [Required Token]
+- Show (/products/:id) GET [Required Token]
+- Create (/product/create) POST [Required Token]
+  body: {name, price} [Required Token]
 
 #### Users
 
 - create (/user/sign_up) POST
   body: {first_name, last_name, email, username, password}
-- Current order by user(/user/sign_in/order) POST
+- authenticate user in database and get token (/user/sign_up) POST
+  body: {email, password}
+- Current order by user(/user/sign_in/order) POST [Required Token]
   body: {email, password, status}
 
 #### Orders
@@ -26,6 +28,8 @@
 - Set status (/user/sign_in/order/edit/:id) PATCH [token required]
   body: {email, password,status,user_id}
 - Add product (/user/sign_in/order/:id/products) POST [token required]
+  body: {email, password, status,order_id,product_id,quantity}
+- Show all products belong to specific order (/order_product/:id) GET [token required]
   body: {email, password, status,order_id,product_id,quantity}
 
 ## Data Shapes

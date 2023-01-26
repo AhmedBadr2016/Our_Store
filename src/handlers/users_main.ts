@@ -4,69 +4,52 @@ import { userStore } from "../models/user_methods";
 import { users } from "../types/users";
 import jwt from "jsonwebtoken";
 import config from "../config";
+import verifyAuthToken from "../validation/validation";
 
 const our_user_main = new userStore();
 
 const users_handler = (app: express.Application) => {
-  app.get("/users", index);
+  app.get("/users", verifyAuthToken, index);
 
-  app.get("/user/:email", show);
+  app.get("/user/:email", verifyAuthToken, show);
   console.log("above the create user");
   app.post("/user/sign_up", create);
   app.post("/user/sign_in", authenticate);
 
-  app.patch("/user/edit/:email", update);
+  app.patch("/user/edit/:email", verifyAuthToken, update);
 
-  app.delete("/user/delete/:email", destroy);
+  app.delete("/user/delete/:email", verifyAuthToken, destroy);
 };
 
 const index = async (_req: Request, res: Response) => {
   const new_user = await our_user_main.index();
-  if (new_user !== null) {
-    // res.json(new_user);
-    const token = jwt.sign(
-      { new_user },
-      config.tokensecret as unknown as string
-    );
+  if (new_user) {
     return res.json({
       status: 200,
-      data: { ...new_user, token },
+      data: { ...new_user },
       message: `user authenticated successfully`,
     });
   } else {
-    res
-      .status(404)
-      .send(
-        `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-      );
-    console.log(
-      `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-    );
+    return res.json({
+      status: 401,
+      message: `No products in that order`,
+    });
   }
 };
 
 const show = async (req: Request, res: Response) => {
   const new_user = await our_user_main.show(req.params.email);
-  if (new_user !== null) {
-    // res.json(new_user);
-    const token = jwt.sign(
-      { new_user },
-      config.tokensecret as unknown as string
-    );
+  if (new_user) {
     return res.json({
       status: 200,
-      data: { ...new_user, token },
+      data: { ...new_user },
       message: `user authenticated successfully`,
     });
   } else {
-    res
-      .status(404)
-      .send(
-        `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-      );
-    console.log(
-      `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-    );
+    return res.json({
+      status: 401,
+      message: `No products in that order`,
+    });
   }
 };
 
@@ -153,26 +136,17 @@ const update = async (req: Request, res: Response) => {
     };
 
     const new_user = await our_user_main.update(user);
-    if (new_user !== null) {
-      // res.json(new_user);
-      const token = jwt.sign(
-        { new_user },
-        config.tokensecret as unknown as string
-      );
+    if (new_user) {
       return res.json({
         status: 200,
-        data: { ...new_user, token },
+        data: { ...new_user },
         message: `user authenticated successfully`,
       });
     } else {
-      res
-        .status(404)
-        .send(
-          `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-        );
-      console.log(
-        `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-      );
+      return res.json({
+        status: 401,
+        message: `No products in that order`,
+      });
     }
   } catch (err) {
     res
@@ -184,26 +158,17 @@ const update = async (req: Request, res: Response) => {
 
 const destroy = async (req: Request, res: Response) => {
   const new_user = await our_user_main.delete(req.params.email);
-  if (new_user !== null) {
-    // res.json(new_user);
-    const token = jwt.sign(
-      { new_user },
-      config.tokensecret as unknown as string
-    );
+  if (new_user) {
     return res.json({
       status: 200,
-      data: { ...new_user, token },
+      data: { ...new_user },
       message: `user authenticated successfully`,
     });
   } else {
-    res
-      .status(404)
-      .send(
-        `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-      );
-    console.log(
-      `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
-    );
+    return res.json({
+      status: 401,
+      message: `No products in that order`,
+    });
   }
 };
 

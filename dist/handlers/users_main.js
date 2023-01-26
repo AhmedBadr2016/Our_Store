@@ -6,50 +6,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_methods_1 = require("../models/user_methods");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config"));
+const validation_1 = __importDefault(require("../validation/validation"));
 const our_user_main = new user_methods_1.userStore();
 const users_handler = (app) => {
-    app.get("/users", index);
-    app.get("/user/:email", show);
+    app.get("/users", validation_1.default, index);
+    app.get("/user/:email", validation_1.default, show);
     console.log("above the create user");
     app.post("/user/sign_up", create);
     app.post("/user/sign_in", authenticate);
-    app.patch("/user/edit/:email", update);
-    app.delete("/user/delete/:email", destroy);
+    app.patch("/user/edit/:email", validation_1.default, update);
+    app.delete("/user/delete/:email", validation_1.default, destroy);
 };
 const index = async (_req, res) => {
     const new_user = await our_user_main.index();
-    if (new_user !== null) {
-        // res.json(new_user);
-        const token = jsonwebtoken_1.default.sign({ new_user }, config_1.default.tokensecret);
+    if (new_user) {
         return res.json({
             status: 200,
-            data: { ...new_user, token },
+            data: { ...new_user },
             message: `user authenticated successfully`,
         });
     }
     else {
-        res
-            .status(404)
-            .send(`The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
-        console.log(`The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
+        return res.json({
+            status: 401,
+            message: `No products in that order`,
+        });
     }
 };
 const show = async (req, res) => {
     const new_user = await our_user_main.show(req.params.email);
-    if (new_user !== null) {
-        // res.json(new_user);
-        const token = jsonwebtoken_1.default.sign({ new_user }, config_1.default.tokensecret);
+    if (new_user) {
         return res.json({
             status: 200,
-            data: { ...new_user, token },
+            data: { ...new_user },
             message: `user authenticated successfully`,
         });
     }
     else {
-        res
-            .status(404)
-            .send(`The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
-        console.log(`The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
+        return res.json({
+            status: 401,
+            message: `No products in that order`,
+        });
     }
 };
 const create = async (req, res) => {
@@ -119,20 +116,18 @@ const update = async (req, res) => {
             password: req.body.password,
         };
         const new_user = await our_user_main.update(user);
-        if (new_user !== null) {
-            // res.json(new_user);
-            const token = jsonwebtoken_1.default.sign({ new_user }, config_1.default.tokensecret);
+        if (new_user) {
             return res.json({
                 status: 200,
-                data: { ...new_user, token },
+                data: { ...new_user },
                 message: `user authenticated successfully`,
             });
         }
         else {
-            res
-                .status(404)
-                .send(`The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
-            console.log(`The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
+            return res.json({
+                status: 401,
+                message: `No products in that order`,
+            });
         }
     }
     catch (err) {
@@ -144,20 +139,18 @@ const update = async (req, res) => {
 };
 const destroy = async (req, res) => {
     const new_user = await our_user_main.delete(req.params.email);
-    if (new_user !== null) {
-        // res.json(new_user);
-        const token = jsonwebtoken_1.default.sign({ new_user }, config_1.default.tokensecret);
+    if (new_user) {
         return res.json({
             status: 200,
-            data: { ...new_user, token },
+            data: { ...new_user },
             message: `user authenticated successfully`,
         });
     }
     else {
-        res
-            .status(404)
-            .send(`The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
-        console.log(`The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`);
+        return res.json({
+            status: 401,
+            message: `No products in that order`,
+        });
     }
 };
 exports.default = users_handler;
