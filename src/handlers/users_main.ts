@@ -1,10 +1,13 @@
+// import { config } from "dotenv";
 import express, { Request, Response } from "express";
 import { userStore } from "../models/user_methods";
 import { users } from "../types/users";
+import jwt from "jsonwebtoken";
+import config from "../config";
 
 const our_user_main = new userStore();
 
-const users_handler = (app: express.Application): void => {
+const users_handler = (app: express.Application) => {
   app.get("/users", index);
 
   app.get("/user/:email", show);
@@ -18,13 +21,53 @@ const users_handler = (app: express.Application): void => {
 };
 
 const index = async (_req: Request, res: Response) => {
-  const output_all = await our_user_main.index();
-  res.json(output_all);
+  const new_user = await our_user_main.index();
+  if (new_user !== null) {
+    // res.json(new_user);
+    const token = jwt.sign(
+      { new_user },
+      config.tokensecret as unknown as string
+    );
+    return res.json({
+      status: 200,
+      data: { ...new_user, token },
+      message: `user authenticated successfully`,
+    });
+  } else {
+    res
+      .status(404)
+      .send(
+        `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+      );
+    console.log(
+      `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+    );
+  }
 };
 
 const show = async (req: Request, res: Response) => {
-  const output_one = await our_user_main.show(req.params.email);
-  res.json(output_one);
+  const new_user = await our_user_main.show(req.params.email);
+  if (new_user !== null) {
+    // res.json(new_user);
+    const token = jwt.sign(
+      { new_user },
+      config.tokensecret as unknown as string
+    );
+    return res.json({
+      status: 200,
+      data: { ...new_user, token },
+      message: `user authenticated successfully`,
+    });
+  } else {
+    res
+      .status(404)
+      .send(
+        `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+      );
+    console.log(
+      `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+    );
+  }
 };
 
 const create = async (req: Request, res: Response) => {
@@ -38,7 +81,27 @@ const create = async (req: Request, res: Response) => {
     };
     console.log("Sign up new user");
     const new_user = await our_user_main.create(user);
-    res.json(new_user);
+    if (new_user !== null) {
+      // res.json(new_user);
+      const token = jwt.sign(
+        { new_user },
+        config.tokensecret as unknown as string
+      );
+      return res.json({
+        status: 200,
+        data: { ...new_user, token },
+        message: `user authenticated successfully`,
+      });
+    } else {
+      res
+        .status(404)
+        .send(
+          `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+        );
+      console.log(
+        `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+      );
+    }
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -53,12 +116,21 @@ const authenticate = async (req: Request, res: Response) => {
       req.body.password
     );
     if (new_user !== null) {
-      res.json(new_user);
+      // res.json(new_user);
+      const token = jwt.sign(
+        { new_user },
+        config.tokensecret as unknown as string
+      );
+      return res.json({
+        status: 200,
+        data: { ...new_user, token },
+        message: `user authenticated successfully`,
+      });
     } else {
       res
         .status(404)
         .send(
-          `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+          `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
         );
       console.log(
         `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
@@ -81,7 +153,27 @@ const update = async (req: Request, res: Response) => {
     };
 
     const new_user = await our_user_main.update(user);
-    res.json(new_user);
+    if (new_user !== null) {
+      // res.json(new_user);
+      const token = jwt.sign(
+        { new_user },
+        config.tokensecret as unknown as string
+      );
+      return res.json({
+        status: 200,
+        data: { ...new_user, token },
+        message: `user authenticated successfully`,
+      });
+    } else {
+      res
+        .status(404)
+        .send(
+          `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+        );
+      console.log(
+        `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+      );
+    }
   } catch (err) {
     res
       .status(400)
@@ -91,8 +183,28 @@ const update = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-  const deleted = await our_user_main.delete(req.params.email);
-  res.json(deleted);
+  const new_user = await our_user_main.delete(req.params.email);
+  if (new_user !== null) {
+    // res.json(new_user);
+    const token = jwt.sign(
+      { new_user },
+      config.tokensecret as unknown as string
+    );
+    return res.json({
+      status: 200,
+      data: { ...new_user, token },
+      message: `user authenticated successfully`,
+    });
+  } else {
+    res
+      .status(404)
+      .send(
+        `The user and password don't match. Please try again or go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+      );
+    console.log(
+      `The user is not exist. Please go to: http://localhost:3000/user/sign_up and create new user and enter the first_name & last_name & email & username & password in the body`
+    );
+  }
 };
 
 export default users_handler;

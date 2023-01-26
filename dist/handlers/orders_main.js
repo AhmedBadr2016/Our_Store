@@ -4,14 +4,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const order_methods_1 = __importDefault(require("../models/order_methods"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = __importDefault(require("../config"));
 const our_order_main = new order_methods_1.default();
 const index = async (_req, res) => {
-    const output_all = await our_order_main.get_all_orders();
-    res.json(output_all);
+    const new_order = await our_order_main.get_all_orders();
+    if (new_order !== null) {
+        // res.json(new_order);
+        const token = jsonwebtoken_1.default.sign({ new_order }, config_1.default.tokensecret);
+        return res.json({
+            status: 200,
+            data: { ...new_order, token },
+            message: `order authenticated successfully`,
+        });
+    }
+    else {
+        res
+            .status(404)
+            .send(`The order and password don't match. Please try again or go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+        console.log(`The order is not exist. Please go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+    }
 };
 const show = async (req, res) => {
-    const output_one = await our_order_main.get_specific_order(req.body.id);
-    res.json(output_one);
+    const new_order = await our_order_main.get_specific_order(req.body.id);
+    if (new_order !== null) {
+        // res.json(new_order);
+        const token = jsonwebtoken_1.default.sign({ new_order }, config_1.default.tokensecret);
+        return res.json({
+            status: 200,
+            data: { ...new_order, token },
+            message: `order authenticated successfully`,
+        });
+    }
+    else {
+        res
+            .status(404)
+            .send(`The order and password don't match. Please try again or go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+        console.log(`The order is not exist. Please go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+    }
 };
 const create = async (req, res) => {
     try {
@@ -21,11 +51,39 @@ const create = async (req, res) => {
         };
         if (order.status == "active") {
             const new_order = await our_order_main.create(order);
-            res.json(new_order);
+            if (new_order !== null) {
+                // res.json(new_order);
+                const token = jsonwebtoken_1.default.sign({ new_order }, config_1.default.tokensecret);
+                return res.json({
+                    status: 200,
+                    data: { ...new_order, token },
+                    message: `order authenticated successfully`,
+                });
+            }
+            else {
+                res
+                    .status(404)
+                    .send(`The order and password don't match. Please try again or go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+                console.log(`The order is not exist. Please go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+            }
         }
         else if (order.status == "complete") {
             const new_order = await our_order_main.create(order);
-            res.json(new_order);
+            if (new_order !== null) {
+                // res.json(new_order);
+                const token = jsonwebtoken_1.default.sign({ new_order }, config_1.default.tokensecret);
+                return res.json({
+                    status: 200,
+                    data: { ...new_order, token },
+                    message: `order authenticated successfully`,
+                });
+            }
+            else {
+                res
+                    .status(404)
+                    .send(`The order and password don't match. Please try again or go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+                console.log(`The order is not exist. Please go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+            }
         }
         else {
             res
@@ -46,7 +104,21 @@ const update = async (req, res) => {
             user_id: req.body.id,
         };
         const new_order = await our_order_main.update_order(order);
-        res.json(new_order);
+        if (new_order !== null) {
+            // res.json(new_order);
+            const token = jsonwebtoken_1.default.sign({ new_order }, config_1.default.tokensecret);
+            return res.json({
+                status: 200,
+                data: { ...new_order, token },
+                message: `order authenticated successfully`,
+            });
+        }
+        else {
+            res
+                .status(404)
+                .send(`The order and password don't match. Please try again or go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+            console.log(`The order is not exist. Please go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+        }
     }
     catch (err) {
         res.status(400);
@@ -54,8 +126,22 @@ const update = async (req, res) => {
     }
 };
 const destroy = async (req, res) => {
-    const deleted = await our_order_main.delete(req.params.id);
-    res.json(deleted);
+    const new_order = await our_order_main.delete(req.params.id);
+    if (new_order !== null) {
+        // res.json(new_order);
+        const token = jsonwebtoken_1.default.sign({ new_order }, config_1.default.tokensecret);
+        return res.json({
+            status: 200,
+            data: { ...new_order, token },
+            message: `order authenticated successfully`,
+        });
+    }
+    else {
+        res
+            .status(404)
+            .send(`The order and password don't match. Please try again or go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+        console.log(`The order is not exist. Please go to: http://localhost:3000/order/sign_up and create new order and enter the first_name & last_name & email & ordername & password in the body`);
+    }
 };
 const orders_handler = (app) => {
     app.get("/user/sign_in/orders", index);

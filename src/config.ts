@@ -11,6 +11,7 @@ const {
   POSTGRES_PASSWORD,
   BCRYPT_PASSWORD,
   SALT_ROUNDS,
+  TOKEN_SECRET,
 } = process.env;
 export default {
   port: PORT,
@@ -21,4 +22,5 @@ export default {
   password: POSTGRES_PASSWORD,
   papper: BCRYPT_PASSWORD,
   salt: SALT_ROUNDS,
+  tokensecret: TOKEN_SECRET,
 };

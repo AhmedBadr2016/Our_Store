@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import express, { Request, Response } from "express";
 //import bodyParser from "body-parser";
 import config from "./config";
@@ -8,6 +7,7 @@ import orders_handler from "./handlers/orders_main";
 import products_handler from "./handlers/products_main";
 import order_products_handler from "./handlers/order_products_main";
 import bodyParser from "body-parser";
+// import valid_fun from "./validator/validataion";
 const app: express.Application = express();
 const address = "0.0.0.0:3000";
 console.log(config);

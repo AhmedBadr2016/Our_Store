@@ -1,19 +1,61 @@
 import express, { Request, Response } from "express";
 import order_product_model from "../models/order_product_methods";
 import { order_products } from "../types/order_products";
+import jwt from "jsonwebtoken";
+import config from "../config";
 
 const our_order_product_main = new order_product_model();
 
 const index = async (_req: Request, res: Response) => {
-  const output_all = await our_order_product_main.get_all_order_products();
-  res.json(output_all);
+  const new_product = await our_order_product_main.get_all_order_products();
+  if (new_product !== null) {
+    // res.json(new_product);
+    const token = jwt.sign(
+      { new_product },
+      config.tokensecret as unknown as string
+    );
+    return res.json({
+      status: 200,
+      data: { ...new_product, token },
+      message: `product authenticated successfully`,
+    });
+  } else {
+    res
+      .status(404)
+      .send(
+        `The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+      );
+    console.log(
+      `The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+    );
+  }
 };
 
 const show = async (req: Request, res: Response) => {
-  const output_one = await our_order_product_main.get_specific_order_product(
+  const new_product = await our_order_product_main.get_specific_order_product(
     req.body.order_id
   );
-  res.json(output_one);
+  if (new_product !== null) {
+    // res.json(new_product);
+    const token = jwt.sign(
+      { new_product },
+      config.tokensecret as unknown as string
+    );
+    return res.json({
+      status: 200,
+      data: { ...new_product, token },
+      message: `product authenticated successfully`,
+    });
+  } else {
+    res
+      .status(404)
+      .send(
+        `The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+      );
+    console.log(
+      `The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+    );
+  }
 };
 
 const create = async (req: Request, res: Response) => {
@@ -25,10 +67,28 @@ const create = async (req: Request, res: Response) => {
       quantity: req.body.quantity,
     };
 
-    const new_order_product = await our_order_product_main.create(
-      order_product
-    );
-    res.json(new_order_product);
+    const new_product = await our_order_product_main.create(order_product);
+    if (new_product !== null) {
+      // res.json(new_product);
+      const token = jwt.sign(
+        { new_product },
+        config.tokensecret as unknown as string
+      );
+      return res.json({
+        status: 200,
+        data: { ...new_product, token },
+        message: `product authenticated successfully`,
+      });
+    } else {
+      res
+        .status(404)
+        .send(
+          `The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+        );
+      console.log(
+        `The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+      );
+    }
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -44,10 +104,30 @@ const update = async (req: Request, res: Response) => {
       quantity: req.body.quantity,
     };
 
-    const new_order_product = await our_order_product_main.update_order_product(
+    const new_product = await our_order_product_main.update_order_product(
       order_product
     );
-    res.json(new_order_product);
+    if (new_product !== null) {
+      // res.json(new_product);
+      const token = jwt.sign(
+        { new_product },
+        config.tokensecret as unknown as string
+      );
+      return res.json({
+        status: 200,
+        data: { ...new_product, token },
+        message: `product authenticated successfully`,
+      });
+    } else {
+      res
+        .status(404)
+        .send(
+          `The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+        );
+      console.log(
+        `The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+      );
+    }
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -55,8 +135,28 @@ const update = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-  const deleted = await our_order_product_main.delete(req.params.id);
-  res.json(deleted);
+  const new_product = await our_order_product_main.delete(req.params.id);
+  if (new_product !== null) {
+    // res.json(new_product);
+    const token = jwt.sign(
+      { new_product },
+      config.tokensecret as unknown as string
+    );
+    return res.json({
+      status: 200,
+      data: { ...new_product, token },
+      message: `product authenticated successfully`,
+    });
+  } else {
+    res
+      .status(404)
+      .send(
+        `The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+      );
+    console.log(
+      `The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+    );
+  }
 };
 
 const addProduct = async (_req: Request, res: Response) => {
@@ -66,8 +166,28 @@ const addProduct = async (_req: Request, res: Response) => {
     quantity: _req.body.quantity,
   };
   try {
-    const addedProduct = await our_order_product_main.addProduct(op);
-    res.json(addedProduct);
+    const new_product = await our_order_product_main.addProduct(op);
+    if (new_product !== null) {
+      // res.json(new_product);
+      const token = jwt.sign(
+        { new_product },
+        config.tokensecret as unknown as string
+      );
+      return res.json({
+        status: 200,
+        data: { ...new_product, token },
+        message: `product authenticated successfully`,
+      });
+    } else {
+      res
+        .status(404)
+        .send(
+          `The product and password don't match. Please try again or go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+        );
+      console.log(
+        `The product is not exist. Please go to: http://localhost:3000/product/sign_up and create new product and enter the first_name & last_name & email & productname & password in the body`
+      );
+    }
   } catch (err) {
     res.status(400).send(`can't add products to card`);
     res.json(err);

@@ -22,6 +22,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 BCRYPT_PASSWORD=ahmed2016
 SALT_ROUNDS=10
+TOKEN_SECRET= ahmedbadr
 
 - You have to create two databases with the values you set in POSTGRES_DB, POSTGRES_TEST_DB. For example to connect the psql, use the following sql :
 
@@ -63,4 +64,4 @@ SALT_ROUNDS=10
 - go to http://localhost:3000/user/sign_in/order and create new order
 - go to http://localhost:3000/user/sign_up and create new user
 - go to http://localhost:3000/user/sign_in/order/:id/products and add products to your order
-- go to http://localhost:3000/order_product/:id and show products of your order
+- go to http://localhost:3000/order_product/:id and show all products of your order' id
